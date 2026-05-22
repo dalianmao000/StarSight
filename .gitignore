@@ -136,11 +136,8 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Project specific
-logs/
-*.log
-temp/
-tmp/
-data/*
-!data/.gitkeep
-checkpoints/
+# Project specific - local only (not to be pushed)
+# Sensitive documents containing business requirements
+chat-资深数据分析师需求分析.txt
+需求分析文档.md
+项目需求文档PRD.md
