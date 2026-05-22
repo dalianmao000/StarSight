@@ -1,0 +1,19 @@
+# Database MCP Server Dependencies
+
+# Core
+mcp>=0.6.0
+fastapi>=0.109.0
+uvicorn>=0.27.0
+
+# Database Connectors
+psycopg2-binary>=2.9.9
+mysql-connector-python>=8.2.0
+sqlalchemy>=2.0.0
+
+# Configuration
+pyyaml>=6.0
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+
+# Utilities
+structlog>=23.2.0

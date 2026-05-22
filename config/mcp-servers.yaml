@@ -1,0 +1,107 @@
+# Claude Code 架构设计 - MCP Servers
+
+mcp_servers:
+  # ========================================
+  # Database MCP Server
+  # ========================================
+  database:
+    name: database-mcp
+    protocol: postgresql
+    host: ${DB_HOST}
+    port: 5432
+    database: ${DB_NAME}
+    user: ${DB_USER}
+    password: ${DB_PASSWORD}
+    pool_size: 10
+    connection_timeout: 30
+
+  # ========================================
+  # Spark MCP Server
+  # ========================================
+  spark:
+    name: spark-mcp
+    protocol: livy
+    host: ${SPARK_LIVY_HOST}
+    port: 8998
+    spark_version: "3.4.0"
+    deploy_mode: cluster
+    queue: default
+
+  # ========================================
+  # MLflow MCP Server
+  # ========================================
+  mlflow:
+    name: mlflow-mcp
+    protocol: http
+    host: ${MLFLOW_HOST}
+    port: 5000
+    tracking_uri: ${MLFLOW_TRACKING_URI}
+    registry_uri: ${MLFLOW_REGISTRY_URI}
+
+  # ========================================
+  # Neo4j MCP Server
+  # ========================================
+  neo4j:
+    name: neo4j-mcp
+    protocol: bolt
+    host: ${NEO4J_HOST}
+    port: 7687
+    database: neo4j
+    user: ${NEO4J_USER}
+    password: ${NEO4J_PASSWORD}
+    max_connection_pool_size: 50
+
+  # ========================================
+  # Feast MCP Server
+  # ========================================
+  feast:
+    name: feast-mcp
+    protocol: grpc
+    host: ${FEAST_HOST}
+    port: 6566
+    project: data_platform
+    feature_store_config: feast_config.yaml
+
+  # ========================================
+  # Milvus MCP Server
+  # ========================================
+  milvus:
+    name: milvus-mcp
+    protocol: grpc
+    host: ${MILVUS_HOST}
+    port: 19530
+    collection_name: embeddings
+    dimension: 768
+
+  # ========================================
+  # Metabase MCP Server
+  # ========================================
+  metabase:
+    name: metabase-mcp
+    protocol: http
+    host: ${METABASE_HOST}
+    port: 3000
+    user: ${METABASE_USER}
+    password: ${METABASE_PASSWORD}
+    site_url: ${METABASE_SITE_URL}
+
+  # ========================================
+  # Camunda MCP Server
+  # ========================================
+  camunda:
+    name: camunda-mcp
+    protocol: http
+    host: ${CAMUNDA_HOST}
+    port: 8080
+    engine: cockpit
+    user: ${CAMUNDA_USER}
+    password: ${CAMUNDA_PASSWORD}
+
+# ========================================
+# MCP Server 全局配置
+# ========================================
+global:
+  timeout: 60
+  retry_attempts: 3
+  retry_delay: 1
+  health_check_interval: 30

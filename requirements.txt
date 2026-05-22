@@ -1,0 +1,84 @@
+# Claude Code Data Platform - Dependencies
+
+# ========================================
+# Core Dependencies
+# ========================================
+claude-code>=0.5.0
+anthropic>=0.18.0
+
+# ========================================
+# MCP Server Framework
+# ========================================
+mcp>=0.6.0
+mcp-server-fastapi>=0.1.0
+
+# ========================================
+# Database Connectors
+# ========================================
+psycopg2-binary>=2.9.9          # PostgreSQL
+mysql-connector-python>=8.2.0    # MySQL
+sqlalchemy>=2.0.0               # SQLAlchemy ORM
+
+# ========================================
+# Spark & Big Data
+# ========================================
+pyspark>=3.4.0                  # Spark Python API
+livy>=0.7.0                     # Livy (Spark REST API)
+findspark>=2.0.0                # Spark initialization in Python
+
+# ========================================
+# Machine Learning & Model Management
+# ========================================
+mlflow>=2.10.0                  # MLflow
+scikit-learn>=1.4.0             # ML algorithms
+xgboost>=2.0.0                 # XGBoost
+shap>=0.43.0                    # SHAP for model explainability
+feast>=0.31.0                   # Feature Store
+
+# ========================================
+# Graph & Vector Databases
+# ========================================
+neo4j>=5.14.0                   # Neo4j Python Driver
+milvus>=2.3.0                   # Milvus SDK
+pymilvus>=2.3.0                 # Milvus Python SDK
+
+# ========================================
+# Data Processing
+# ========================================
+pandas>=2.1.0
+numpy>=1.26.0
+pyarrow>=14.0.0                # Arrow format support
+
+# ========================================
+# Workflow & Approval Engines
+# ========================================
+camunda-python>=0.9.0          # Camunda REST API client
+
+# ========================================
+# API & Web
+# ========================================
+fastapi>=0.109.0               # FastAPI for MCP servers
+uvicorn>=0.27.0                # ASGI server
+httpx>=0.26.0                  # HTTP client
+pydantic>=2.5.0                # Data validation
+
+# ========================================
+# Monitoring & Observability
+# ========================================
+prometheus-client>=0.19.0      # Prometheus metrics
+grafana-api>=1.0.0             # Grafana dashboard API
+
+# ========================================
+# Configuration & Utilities
+# ========================================
+pyyaml>=6.0                    # YAML config parsing
+python-dotenv>=1.0.0          # Environment variables
+structlog>=23.2.0            # Structured logging
+
+# ========================================
+# Testing
+# ========================================
+pytest>=7.4.0
+pytest-asyncio>=0.23.0
+pytest-mock>=3.12.0
+httpx>=0.26.0                  # For testing async HTTP clients

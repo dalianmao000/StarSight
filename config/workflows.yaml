@@ -1,0 +1,237 @@
+# Workflows Configuration
+
+workflows:
+  # ========================================
+  # 标签生命周期流程
+  # ========================================
+  tag-lifecycle:
+    name: tag-lifecycle
+    description: 标签从创建到下线的全生命周期管理
+    initial_state: draft
+    states:
+      draft:
+        description: 标签定义草稿阶段
+        on_enter: create_tag_definition
+        transitions:
+          - to: validating
+            trigger: submit_for_validation
+      validating:
+        description: 标签效果验证阶段
+        on_enter: run_ab_test
+        transitions:
+          - to: approved
+            condition: "accuracy >= 0.9 and coverage >= 0.85"
+          - to: rejected
+            condition: "accuracy < 0.9"
+      approved:
+        description: 标签审批通过
+        on_enter: register_tag
+        transitions:
+          - to: published
+            trigger: hitl_approval_complete
+      published:
+        description: 标签已发布
+        on_enter: enable_tag_api
+        transitions:
+          - to: monitoring
+            trigger: "7d_timer"
+      monitoring:
+        description: 标签监控阶段
+        on_enter: enable_drift_check
+        transitions:
+          - to: degraded
+            condition: "psi > 0.2"
+          - to: archived
+            condition: "usage < 100 and duration > 90d"
+      degraded:
+        description: 标签性能下降
+        on_enter: notify_owner
+        transitions:
+          - to: archived
+            trigger: "30d_timer"
+      archived:
+        description: 标签归档（终态）
+        final: true
+
+  # ========================================
+  # 风控评估流程
+  # ========================================
+  risk-assessment:
+    name: risk-assessment
+    description: 贷前准入/贷中监控/贷后预警全流程
+    nodes:
+      - name: credit_check
+        agent: risk-control
+        tools:
+          - neo4j-mcp
+          - spark-mcp
+        actions:
+          - query_device_graph
+          - calculate_transaction_velocity
+          - run_credit_score_model
+        output:
+          risk_score: float
+          risk_factors: list
+          decision: enum[approve, reject, review]
+        timeout: 5
+
+      - name: fraud_detection
+        agent: risk-control
+        tools:
+          - neo4j-mcp
+        actions:
+          - find_fraud_pattern
+          - detect_device_farm
+          - check_ip_reputation
+        output:
+          fraud_probability: float
+          fraud_tags: list
+        timeout: 3
+
+      - name: hitl_review
+        condition: "risk_score > 0.8 or fraud_probability > 0.5"
+        agent: orchestrator
+        tools:
+          - camunda-mcp
+        actions:
+          - create_approval_task
+          - notify_approver
+        timeout: 60
+
+      - name: final_decision
+        agent: orchestrator
+        input:
+          - credit_check
+          - fraud_detection
+          - hitl_review
+        output:
+          final_decision: string
+          explanation: string
+          decision_id: string
+
+  # ========================================
+  # 广告优化流程
+  # ========================================
+  ad-optimization:
+    name: ad-optimization
+    description: 广告投放从人群圈选到效果归因的全流程
+    stages:
+      - name: audience_selection
+        agent: dmp-ad
+        tools:
+          - database-mcp
+          - milvus-mcp
+        actions:
+          - define_target_segments
+          - generate_lookalike
+          - export_audience_package
+        output:
+          audience_package_id: string
+          audience_size: int
+          similarity_score: float
+        timeout: 30
+
+      - name: strategy_simulation
+        agent: dmp-ad
+        actions:
+          - load_historical_ctr_cvr
+          - simulate_bid_strategy
+          - calculate_expected_roi
+        output:
+          strategy_recommendations: list
+          expected_roi: float
+        timeout: 60
+
+      - name: campaign_execution
+        condition: "strategy_approved"
+        agent: dmp-ad
+        actions:
+          - submit_to_dsp
+          - configure_frequency_cap
+          - set_budget_allocation
+        output:
+          campaign_id: string
+          execution_status: string
+        timeout: 10
+
+      - name: attribution_analysis
+        agent: dmp-ad
+        tools:
+          - spark-mcp
+        schedule: "0 2 * * *"  # 每天凌晨2点
+        actions:
+          - calculate_multi_touch_attribution
+          - analyze_conversion_path
+          - generate_roi_report
+        output:
+          attribution_results: dict
+          roi_report_url: string
+        timeout: 300
+
+      - name: optimization_feedback
+        agent: model-factory
+        trigger: "attribution_analysis complete"
+        actions:
+          - update_ctr_prediction_model
+          - retrain_lookalike_model
+        output:
+          model_updates: list
+          improvement_percentage: float
+
+  # ========================================
+  # NL2SQL 查询流程
+  # ========================================
+  nl2sql-query:
+    name: nl2sql-query
+    description: 自然语言查询转 SQL 并执行
+    stages:
+      - name: intent_parsing
+        agent: insight-report
+        actions:
+          - parse_natural_language
+          - extract_entities
+          - identify_metrics
+          - identify_filters
+        output:
+          parsed_intent: dict
+          confidence: float
+
+      - name: sql_generation
+        agent: insight-report
+        actions:
+          - select_tables
+          - generate_sql
+          - validate_sql
+        input:
+          - parsed_intent
+        output:
+          sql: string
+          sql_confidence: float
+
+      - name: sql_execution
+        agent: data-steward
+        tools:
+          - database-mcp
+        actions:
+          - execute_query
+          - format_results
+        input:
+          - sql
+        output:
+          results: list
+          row_count: int
+          execution_time: float
+
+      - name: result_explanation
+        agent: insight-report
+        actions:
+          - interpret_results
+          - generate_insights
+          - format_response
+        input:
+          - results
+          - parsed_intent
+        output:
+          explanation: string
+          insights: list
+          visualization_type: string

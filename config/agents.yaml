@@ -1,0 +1,155 @@
+# Agents Configuration
+
+agents:
+  # ========================================
+  # Orchestrator Agent - 主编排
+  # ========================================
+  orchestrator:
+    name: orchestrator
+    description: |
+      主编排 Agent，负责意图识别、任务拆解、路由分发、状态追踪和冲突仲裁。
+      是整个数据平台的控制中枢，直接对接业务需求。
+    model: claude-opus-4-7
+    tools:
+      - team_management
+      - task_management
+      - message_bus
+    system_prompt: agents/orchestrator/system.prompt
+    skills:
+      - data-platform-agent-design
+    max_iterations: 100
+    timeout: 300
+
+  # ========================================
+  # Data Steward Agent - 数据治理
+  # ========================================
+  data-steward:
+    name: data-steward
+    description: |
+      数据治理 Agent，负责数据质量监控、ETL 开发、元数据管理。
+      确保数据资产的可用性、完整性和一致性。
+    model: claude-sonnet-4-6
+    tools:
+      - database-mcp
+      - spark-mcp
+    system_prompt: agents/data-steward/system.prompt
+    skills:
+      - spark-data-processing
+    max_iterations: 50
+    timeout: 180
+
+  # ========================================
+  # Tag Profiling Agent - 标签画像
+  # ========================================
+  tag-profiling:
+    name: tag-profiling
+    description: |
+      标签画像 Agent，负责标签挖掘、特征工程、标签血缘追踪和效果验证。
+      构建高准确率、高覆盖率的全域用户标签体系。
+    model: claude-sonnet-4-6
+    tools:
+      - feast-mcp
+      - spark-mcp
+      - database-mcp
+    system_prompt: agents/tag-profiling/system.prompt
+    skills:
+      - mlflow-model-management
+    max_iterations: 50
+    timeout: 180
+
+  # ========================================
+  # Model Factory Agent - 模型工厂
+  # ========================================
+  model-factory:
+    name: model-factory
+    description: |
+      模型工厂 Agent，负责 AutoML、特征筛选、模型训练和效果评估。
+      提供从特征工程到模型上线的全链路模型构建能力。
+    model: claude-opus-4-7
+    tools:
+      - mlflow-mcp
+      - spark-mcp
+      - feast-mcp
+    system_prompt: agents/model-factory/system.prompt
+    skills:
+      - mlflow-model-management
+    max_iterations: 100
+    timeout: 600
+
+  # ========================================
+  # DMP Ad Agent - 广告优化
+  # ========================================
+  dmp-ad:
+    name: dmp-ad
+    description: |
+      广告 DMP Agent负责人群圈选、Lookalike 扩展、多触点归因和策略模拟。
+      优化广告投放效果，提升 CTR/CVR/ROI。
+    model: claude-sonnet-4-6
+    tools:
+      - database-mcp
+      - milvus-mcp
+      - spark-mcp
+    system_prompt: agents/dmp-ad/system.prompt
+    skills:
+      - neo4j-graph-analytics
+    max_iterations: 50
+    timeout: 180
+
+  # ========================================
+  # Risk Control Agent - 风控
+  # ========================================
+  risk-control:
+    name: risk-control
+    description: |
+      风控 Agent，负责反欺诈识别、信用评分、实时预警和合规审计。
+      构建金融级风控能力，降低坏账率和欺诈损失。
+    model: claude-opus-4-7
+    tools:
+      - neo4j-mcp
+      - spark-mcp
+      - camunda-mcp
+    system_prompt: agents/risk-control/system.prompt
+    skills:
+      - neo4j-graph-analytics
+      - hitl-approval-workflow
+    max_iterations: 100
+    timeout: 300
+
+  # ========================================
+  # Insight Report Agent - 洞察报告
+  # ========================================
+  insight-report:
+    name: insight-report
+    description: |
+      洞察报告 Agent，负责 NL2SQL、归因分析、自动化报告生成和可视化。
+      提供自然语言驱动的数据分析能力，输出可落地的商业洞察。
+    model: claude-sonnet-4-6
+    tools:
+      - database-mcp
+      - metabase-mcp
+      - spark-mcp
+    system_prompt: agents/insight-report/system.prompt
+    skills:
+      - nl2sql-pattern
+    max_iterations: 30
+    timeout: 120
+
+# ========================================
+# Team Configuration
+# ========================================
+team:
+  name: data-platform-team
+  leader: orchestrator
+  members:
+    - data-steward
+    - tag-profiling
+    - model-factory
+    - dmp-ad
+    - risk-control
+    - insight-report
+  communication:
+    protocol: message_bus
+    message_format: json
+  coordination:
+    strategy: hierarchical  # hierarchical / decentralized
+    conflict_resolution: leader_decides
