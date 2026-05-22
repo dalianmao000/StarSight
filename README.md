@@ -1,14 +1,12 @@
-# 数据服务平台 - Claude Code AI Agent 架构
+# StarSight - Claude Code AI Agent 数据平台
 
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![CI Status](https://github.com/dalianmao000/StarSight/actions/workflows/ci.yml/badge.svg)](https://github.com/dalianmao000/StarSight/actions)
 
-基于 Claude Code 的 **Skills + Agents + MCP + Plugins** 架构，构建企业级数据分析和商业化平台。
-
 **版权归属**: YINJI LI | **许可证**: MIT License
 
-## 项目价值
+基于 Claude Code 的 **Skills + Agents + MCP + Plugins** 架构，构建企业级数据分析和商业化平台。
 
 ## 项目价值
 
@@ -81,24 +79,14 @@
 ## 目录结构
 
 ```
-p52_StarSight/
+StarSight/
 ├── skills/                    # Skills 目录
 │   ├── data-platform-agent-design/   # ✅ AI Agent 架构设计模式
-│   ├── spark-data-processing/       # ✅ Spark Job 开发规范
-│   ├── mlflow-model-management/      # (待实现)
-│   ├── neo4j-graph-analytics/        # (待实现)
-│   ├── nl2sql-pattern/               # (待实现)
-│   └── hitl-approval-workflow/        # (待实现)
+│   └── spark-data-processing/         # ✅ Spark Job 开发规范
 │
 ├── mcp-servers/               # MCP Servers 目录
-│   ├── database-mcp/           # ✅ PostgreSQL/MySQL
-│   ├── spark-mcp/              # ✅ Livy/Spark Cluster
-│   ├── mlflow-mcp/             # (框架)
-│   ├── neo4j-mcp/              # (框架)
-│   ├── feast-mcp/              # (框架)
-│   ├── milvus-mcp/             # (框架)
-│   ├── metabase-mcp/           # (框架)
-│   └── camunda-mcp/            # (框架)
+│   ├── database-mcp/          # ✅ PostgreSQL/MySQL
+│   └── spark-mcp/             # ✅ Livy/Spark Cluster
 │
 ├── agents/                    # Agents 目录
 │   └── orchestrator/          # ✅ 主编排 Agent
@@ -108,13 +96,11 @@ p52_StarSight/
 │   ├── agents.yaml
 │   └── workflows.yaml
 │
-├── docs/                      # ✅ 文档目录
-│   ├── Claude-Code-架构设计.md
-│   ├── 项目需求文档PRD.md
-│   └── 需求分析文档.md
+├── docs/                      # 文档目录
+│   └── Claude-Code-架构设计.md
 │
 ├── scripts/                   # ✅ 脚本目录
-│   └── setup-team.py          # 项目验证脚本
+│   └── setup-team.py
 │
 ├── workflows/                 # 工作流配置
 ├── CLAUDE.md                  # Claude Code 配置
@@ -217,8 +203,6 @@ python server.py
 
 | 文档 | 路径 |
 |:---|:---|
-| 需求分析文档 | `需求分析文档.md` |
-| 项目需求文档 PRD | `docs/项目需求文档PRD.md` |
 | 技术架构文档 | `docs/Claude-Code-架构设计.md` |
 
 ## 开发进度
@@ -235,4 +219,4 @@ python server.py
 
 ---
 
-**License**: Proprietary - Internal Use Only
+**License**: MIT License | Copyright (c) 2026 YINJI LI
